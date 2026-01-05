@@ -17,7 +17,7 @@ Use *SQLite Data browser* to browser the xbt database or run any of the availabl
 
 ## XBT Monitor website
 Run app.py to create an interactive map with all profiles stored in the database.
-See example in https://cxs1529.github.io/xbt_database/web/
+See example in https://cxs1529.github.io/xbt_database/website/
 
 ### XBT Monitor website main
 ![xbtmonitor_main](https://github.com/user-attachments/assets/484ad117-e9bf-47a2-afb2-47a7b3f1d561)
