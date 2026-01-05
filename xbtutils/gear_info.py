@@ -1,4 +1,5 @@
-from .utilities import *
+# from .utilities import *
+from . import utilities
 
 
 class LauncherClass:
@@ -41,8 +42,8 @@ def get_gear(StringOfBits, csvList, newMessageType):
         gear.launcher = -1
     try:
         # SEAS VERSION
-        [a,b] = get_range(csvList, "SEAS_VERSION", newMessageType)
-        gear.seasVersion = int(bits_to_dec(StringOfBits,a,b,1,0))
+        [a,b] = utilities.get_range(csvList, "SEAS_VERSION", newMessageType)
+        gear.seasVersion = int(utilities.bits_to_dec(StringOfBits,a,b,1,0))
     except: 
         gear.seasVersion = -1
     try:
@@ -64,8 +65,8 @@ def get_launcher(StringOfBits, csvList, newMessageType):
     launcher = LauncherClass()
     try:
         # XBT_LAUNCHER_TYPE    
-        [a,b] = get_range(csvList, "XBT_LAUNCHER_TYPE", newMessageType)
-        code = bits_to_dec(StringOfBits,a,b,1,0)
+        [a,b] = utilities.get_range(csvList, "XBT_LAUNCHER_TYPE", newMessageType)
+        code = utilities.bits_to_dec(StringOfBits,a,b,1,0)
         launcher.code = code
     except:
         code = -1
@@ -108,16 +109,16 @@ def get_probe(StringOfBits, csvList, newMessageType):
 
     try:
         # INSTRUMENT_TYPE
-        [a,b] = get_range(csvList, "INSTRUMENT_TYPE", newMessageType)
-        code = int(bits_to_dec(StringOfBits,a,b,1,0)) # use this to determine coefficients A,B - based on probe ex. deep blue
+        [a,b] = utilities.get_range(csvList, "INSTRUMENT_TYPE", newMessageType)
+        code = int(utilities.bits_to_dec(StringOfBits,a,b,1,0)) # use this to determine coefficients A,B - based on probe ex. deep blue
         probe.code = code
     except:
         code = -1
         probe.code = code
     try:
         # SERIAL NUMBER
-        [a,b] = get_range(csvList, "PROBE_SERIAL_NUMBER", newMessageType)
-        probe.serial = bits_to_dec(StringOfBits,a,b,1,0)
+        [a,b] = utilities.get_range(csvList, "PROBE_SERIAL_NUMBER", newMessageType)
+        probe.serial = utilities.bits_to_dec(StringOfBits,a,b,1,0)
     except:
         probe.serial = -1
 
@@ -324,8 +325,8 @@ def get_recorder(StringOfBits, csvList, newMessageType):
     recorder = RecorderClass()
     try:
         # RECORDER_TYPE
-        [a,b] = get_range(csvList, "RECORDER_TYPE", newMessageType)
-        code = int(bits_to_dec(StringOfBits,a,b,1,0)) # use this to determine sampling frequency - based on data acquisition system ex. MK21
+        [a,b] = utilities.get_range(csvList, "RECORDER_TYPE", newMessageType)
+        code = int(utilities.bits_to_dec(StringOfBits,a,b,1,0)) # use this to determine sampling frequency - based on data acquisition system ex. MK21
         recorder.code = code
     except:
         code = -1

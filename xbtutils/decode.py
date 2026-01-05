@@ -6,9 +6,11 @@ from .gear_info import *
 from .rider_info import *
 from .vessel_info import *
 from .sample_info import *
-# from .extras import *
+from .data_quality import *
 
 
+# XBT Binary data object class
+# Holds all metadata and profile data from a binary XBT file after decoding
 class xbtBinaryClass:
   def __init__(self, msgType=-99, fileName="na"):
     self.vessel = VesselClass()
@@ -20,8 +22,10 @@ class xbtBinaryClass:
     self.fileName = fileName
     self.profileDatetime = ProfileDatetimeClass()
     self.profile = ProfileClass()
+    self.quality = QualityClass()
 
   # returns a dictionary with the xbt object values
+  # useful for DataFrame creation
   def convert_to_dictionary(self):
     xbtdict = {
       # vessel
@@ -63,8 +67,12 @@ class xbtBinaryClass:
       # fname
       "fileName" : self.fileName,
       # profile datetime
-      # "dtObject": int = -99,
       "dtString": self.profileDatetime.dtString,
+      # data quality
+      "dataQualityCode": self.quality.dataQuality.code,
+      "dataQualityName": self.quality.dataQuality.name,
+      "dataResolutionCode": self.quality.dataResolution.code,
+      "dataResolutionName": self.quality.dataResolution.name,
       # profile
       "dataPoints": self.profile.dataPoints,
       "depths": self.profile.depths,
@@ -73,7 +81,7 @@ class xbtBinaryClass:
     
     return xbtdict
 
-  # print only the metadata
+  # print all binary header info
   def print_binary_header(self):
     print("\r\n********************************************************************")
     print('fileName     |', self.fileName)
@@ -97,10 +105,12 @@ class xbtBinaryClass:
     print('Recorder     |', self.gear.recorder.name, '(', self.gear.recorder.code , ')', 'Frequency:', self.gear.recorder.frequency,'Hz')
     print('Probe        |', self.gear.probe.name, '(', self.gear.probe.code,')', 'SN:', int(self.gear.probe.serial), 'Max Depth:', self.gear.probe.maxDepth, 'CoefA:', self.gear.probe.coefA, 'CoefB:', self.gear.probe.coefB)
     print('Samples      |', self.profile.dataPoints)
+    print('Data Res.    |', self.quality.dataResolution.name, '(', self.quality.dataResolution.code,')')
+    print('Data Quality |', self.quality.dataQuality.name, '(', self.quality.dataQuality.code,')')
     print('Rider        |','Name:' ,self.rider.name, "Email:",self.rider.email, "Institution:", self.rider.institution, "Phone:", self.rider.phone)
     print("********************************************************************\r\n")
 
-  # print only sampled data
+  # print profile data (depth and temperature)
   def print_binary_data(self):
     print("\n>DataPoints:", self.profile.dataPoints)
     print("#############################")
@@ -109,7 +119,7 @@ class xbtBinaryClass:
       print(self.profile.depths[i], self.profile.temperatures[i])
     print("#############################")
 
-
+# END xbtBinaryClass
 
      
      
@@ -125,7 +135,7 @@ def decode_binary(binfile):
     # File name
     xbt.fileName = binfile.split(os.sep)[-1] # get only file name
 
-    print("\r\n** DECODING BINARY ", xbt.fileName, " **")
+    print("\r\n> Decoding binary:", xbt.fileName)
     try:
       # Extract data from binary file
       myBitStream = bitstring.ConstBitStream(filename=binfile) # reads the whole file as a bitstring object
@@ -145,8 +155,10 @@ def decode_binary(binfile):
       # DATE TIME
       xbt.profileDatetime = get_sample_datetime(StringOfBits, csvList, newMessageType)
       # print("> xbt.profileDatetime:", xbt.profileDatetime.dtString)
-      # PROFILE DATA
-      xbt.profile = get_profile_data(StringOfBits, csvList, newMessageType)
+      # QUALITY CONTROL
+      xbt.quality = get_data_qc(StringOfBits, csvList, newMessageType)
+      # PROFILE DATA >> depth is based on probe type coef A and B and recorder sampling frequency
+      xbt.profile = get_profile_data(StringOfBits, csvList, newMessageType, xbt.gear)  # temperatures and depths lists
       # AGENCY_OWNER
       xbt.agency = get_agency(StringOfBits, csvList, newMessageType)
       # RIDER INFORMATION (class/object rider.var)
@@ -156,12 +168,14 @@ def decode_binary(binfile):
       print(f"> WARNING: {xbt.fileName} not a valid binary file! >>", e)
       file_ok = False
     finally:
-      print("** END DECODING", xbt.fileName, " **")
+      print("> End decoding", xbt.fileName)
 
     return xbt, file_ok
 
 
 
+# Decode binary but only print warnings, no exceptions. 
+# Use only for tests to display all warnings
 def decode_binary_warnings(binfile):
     # create xbtdata object class to store binary file info
     xbt = xbtBinaryClass()
@@ -190,15 +204,19 @@ def decode_binary_warnings(binfile):
     # DATE TIME
     xbt.profileDatetime = get_sample_datetime(StringOfBits, csvList, newMessageType)
     # print("> xbt.profileDatetime:", xbt.profileDatetime.dtString)
+    #xbt.dataQuality = get_data_quality(StringOfBits, csvList, newMessageType)
+    # QUALITY CONTROL
+    xbt.quality = get_data_qc(StringOfBits, csvList, newMessageType)
+    # PROFILE DATA >> depth is based on probe type coef A and B and recorder sampling frequency
+    xbt.profile = get_profile_data(StringOfBits, csvList, newMessageType, xbt.gear)  # temperatures and depths lists
     # PROFILE DATA
-    xbt.profile = get_profile_data(StringOfBits, csvList, newMessageType)
+    xbt.profile = get_profile_data(StringOfBits, csvList, newMessageType, xbt.gear)
     # AGENCY_OWNER
     xbt.agency = get_agency(StringOfBits, csvList, newMessageType)
     # RIDER INFORMATION (class/object rider.var)
     xbt.rider = get_rider(StringOfBits, csvList, newMessageType)
     # in case of any problem flag file as bad so no further processing or storage is done
 
-  
     print("** END DECODING", xbt.fileName, " **")
 
     return xbt

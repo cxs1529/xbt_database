@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-
+# Only for testing purposes
 def plot_profile(depth, temperature):
     fig, ax = plt.subplots()  
     ax.plot(temperature, depth)

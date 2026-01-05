@@ -1,0 +1,17 @@
+{% extends "base_template.html" %}
+
+{% block title %}XBT Monitor{% endblock %}
+
+{% block content %}
+
+<link rel="stylesheet" href="static/css/profile_styles.css" />
+
+<h1>XBT MONITOR</h1>
+<hr>
+<h2>XBT PROFILES</h2>
+<hr>
+
+<!-- List with profiles grouped per soopline and link to plot -->
+{{ profile_table | safe }}
+
+{% endblock %}

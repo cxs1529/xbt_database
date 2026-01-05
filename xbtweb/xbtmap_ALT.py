@@ -4,22 +4,19 @@ import random
 import os
 import posixpath
 from urllib.parse import quote
-from collections import defaultdict
-from datetime import datetime as dt
 
 # This file creates an interactive map with markers for XBT profiles organized hierarchically:
-# The Control Menu is grouped by Year.
-# Uses Checkboxes (Mutually Exclusive = False), allowing multiple selections.
+# The Control Menu is grouped by Year, with individual SOOP Lines listed under each Year.
 
 def make_xbt_map(dict_list, outputParentDir, map_subdir, plots_subdir, json_subdir, fname):
     init_pos = [20.416501, -69.914840]
     full_map = folium.Map(location=init_pos, zoom_start=6)
 
     # Dictionary to structure the GroupedLayerControl
-    # Structure: {'Year_String': [FeatureGroup1, FeatureGroup2, ...]}
-    grouped_overlays = defaultdict(list)
+    # Correct Structure: {'Year_String': [FeatureGroup1, FeatureGroup2, ...]}
+    grouped_overlays = {}
 
-    # Track created layers to avoid duplicates
+    # Dictionary to keep track of created layers to avoid duplicates
     # Structure: {'2015_AX10': <folium.FeatureGroup Object>}
     created_layers = {}
 
@@ -27,10 +24,6 @@ def make_xbt_map(dict_list, outputParentDir, map_subdir, plots_subdir, json_subd
     soopLine_prev = ""
     callSign_prev = ""
     transectNumber_prev = ""
-    datetime_prev = "2000-01-01 00:00:00"  # very old date
-
-    dtnow = dt.now() # to later check for recent profiles
-    #now_timestamp = dtnow.strftime("%Y-%m-%d %H:%M:%S")
     
     # ---------------------------------------------------------
     # 1. PROCESS PROFILES AND CREATE LAYERS
@@ -42,7 +35,7 @@ def make_xbt_map(dict_list, outputParentDir, map_subdir, plots_subdir, json_subd
         soopLine = dict_item["soopLine"]
         transectNumber = dict_item["transectNumber"]
         callSign = dict_item["callSign"]
-        datetime = dict_item["datetime"] # format: 'YYYY-MM-DD HH:MM:SS' i.e. 2024-06-20 16:09:00
+        datetime = dict_item["datetime"]
         fileName = dict_item["fileName"]
         
         # Extract Year to serve as the Group Header
@@ -55,14 +48,18 @@ def make_xbt_map(dict_list, outputParentDir, map_subdir, plots_subdir, json_subd
         if layer_key not in created_layers:
             # Create a new FeatureGroup. 
             # 'name' is what appears in the toggle list (just the SOOP Line name)
-            # show=False makes layers unchecked by default (cleaner start)
-            fg = folium.FeatureGroup(name=soopLine, overlay=True, show=False)
+            fg = folium.FeatureGroup(name=soopLine, overlay=True)
             fg.add_to(full_map)
             
             # Store in our tracking dict
             created_layers[layer_key] = fg
             
-            # Add to the grouped_overlays dictionary list
+            # Add to the grouped_overlays dictionary for the control
+            # FIX: Use a LIST to store layers for the group, not a dictionary
+            if profileYear not in grouped_overlays:
+                grouped_overlays[profileYear] = []
+            
+            # Append the layer object to the list
             grouped_overlays[profileYear].append(fg)
 
         # ---------------------------------------------------------
@@ -77,36 +74,16 @@ def make_xbt_map(dict_list, outputParentDir, map_subdir, plots_subdir, json_subd
         plotLink = quote(plotLink, safe="/")
         jsonLink = quote(jsonLink, safe="/")
 
-        # the database query returns profiles sorted by soopline, datetime and callsign: ORDER BY main.soopLine,main.datetime,main.callSign ASC
-        # for cruises in the same year, check if time between profiles is small (up to 7 days) and if so, keep the same color        
-        if (callSign == callSign_prev) and (soopLine == soopLine_prev):
-            date_obj = dt.strptime(datetime, "%Y-%m-%d %H:%M:%S")
-            date_obj_prev = dt.strptime(datetime_prev, "%Y-%m-%d %H:%M:%S")
-            delta_days = abs((date_obj - date_obj_prev).days)
-            if delta_days <= 7:
-                different_cruise = False                
-            else:
-                different_cruise = True
-
-        # Update color if key attributes change        
-        if (callSign != callSign_prev) or (soopLine != soopLine_prev) or (transectNumber != transectNumber_prev) or (different_cruise == True):
+        # Update color if key attributes change
+        if (callSign != callSign_prev) or (soopLine != soopLine_prev) or (transectNumber != transectNumber_prev):
             fc_r, fc_g, fc_b = generate_random_rgb_color()
 
         popup_text = f"callSign: {callSign}<br>position: {(latitude):.3f},{(longitude):.3f}<br>soopLine: {soopLine}<br>datetime: {datetime}<br>transectNumber: {transectNumber}<br>file: {fileName}<br><a href=\"{jsonLink}\" alt='JSON'>JSON</a>  |  <a href=\"{plotLink}\" alt='Plot'>Plot</a>"
         tip_text = f"callSign: {callSign}<br>soopLine: {soopLine} ({transectNumber})<br>datetime: {datetime}"
 
         fillcolor = f"rgb({fc_r},{fc_g},{fc_b})"
-
-        # if recent cruise (within last 7 days), make marker larger
-        
-        profile_datetime_obj = dt.strptime(datetime, "%Y-%m-%d %H:%M:%S")
-        days_difference = (dtnow - profile_datetime_obj).days
-        if days_difference <= 7:
-            radius = 8
-            extcolor = "black"
-        else:
-            extcolor = "white"
-            radius = 5
+        extcolor = "white"
+        radius = 5
         
         # ---------------------------------------------------------
         # 3. CREATE MARKER AND ADD TO SPECIFIC LAYER
@@ -120,35 +97,15 @@ def make_xbt_map(dict_list, outputParentDir, map_subdir, plots_subdir, json_subd
         callSign_prev = callSign
         soopLine_prev = soopLine
         transectNumber_prev = transectNumber
-        datetime_prev = datetime
 
     # ---------------------------------------------------------
     # 4. ADD GROUPED LAYER CONTROL
     # ---------------------------------------------------------
-    # style the group headers by year
-    # full_map.get_root().header.add_child(folium.Element(
-    #     """
-    #     <style>
-    #     .leaflet-control-layers-group-label {
-    #         font-weight: 900 !important;
-    #         color: #000;
-    #         background-color: #ADD8E6; /* Light Blue */
-    #         padding: 5px;
-            
-    #         /* FLEXBOX FIX: Keeps checkbox and text visible and aligned */
-    #         display: flex;       
-    #         align-items: center; 
-    #         width: 100%;         
-    #         box-sizing: border-box; /* Ensures padding doesn't break the width */
-    #     }
-    #     </style>
-    #     """
-    #     ))
-
-
+    # This renders the menu with Years as headers and SOOP lines as checkboxes.
+    # The 'groups' argument must be {'Group Name': [Layer1, Layer2, ...]}
     GroupedLayerControl(
         groups=grouped_overlays,
-        collapsed=False,
+        collapsed=True,
         exclusive_groups=False 
     ).add_to(full_map)
 
@@ -161,9 +118,6 @@ def make_xbt_map(dict_list, outputParentDir, map_subdir, plots_subdir, json_subd
 
 # creates a circle marker and returns the marker object
 def create_map_marker(lat, lon, radius, extcolor, fillcolor, popup_text, tip_text):
-    # create popup object to hold the popup text with specified max width
-    popup_obj = folium.Popup(popup_text, max_width=600)
-    # create the circle marker
     myobj = folium.CircleMarker(
         location=[lat, lon],
         radius=radius,
@@ -171,7 +125,7 @@ def create_map_marker(lat, lon, radius, extcolor, fillcolor, popup_text, tip_tex
         fill=True,
         fill_color=fillcolor,
         fill_opacity=0.7,
-        popup=popup_obj,
+        popup=popup_text,
         tooltip=tip_text
     )
     return myobj

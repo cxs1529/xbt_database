@@ -1,0 +1,103 @@
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+h1 {
+	text-align: center;
+	font-size: 40px;
+	font-weight: 700;
+	color: #FFFFFF;  /* #003087 */
+    background-color: #CDCFD1;
+	padding: 1px;
+	margin: 1px;
+    letter-spacing: -2px;
+    line-height: 66px;   
+}
+
+h2 {
+	text-align: center;
+	font-size: 20px;
+	font-weight: 600;
+	color: #003087;
+	padding: 1px;
+	margin: 5px
+}
+
+h3 {	
+    color: #323C46;
+    font-size: 15px;
+    font-weight: bold;
+    text-wrap: balance;
+}
+
+hr {
+	border: 0;
+	height: 1px;
+	background: #003087;
+	margin: 20px 0;
+}
+
+
+/* TABLE STYLES */
+tr:nth-child(even) {
+    background-color:#90DFE3;
+}
+
+tr:nth-child(odd) {
+    background-color: #FFFFFF;
+}
+
+tr {
+    padding: 10px;
+    border-spacing: 1px;
+}
+
+tr:hover {
+    background-color: #FF8400;
+}
+
+table {
+	font-family: Helvetica;
+    border-spacing: 1px;
+    margin: 1px;
+    border: 1px solid #ddd;
+    width: 100%;
+    text-align: center;
+    white-space: nowrap;
+    padding: 5px;
+}
+
+th {
+    background-color:#006178;
+	color: white;
+    text-align: center;
+    font-weight: bold;
+    padding: 5px;
+    margin: 1px;
+    border-spacing: 1px;
+}
+
+td {
+    padding: 5px;
+    width: 10%;
+    border: 1px solid #ddd;
+    border-spacing: 1px;    
+}
+
+
+/* FISCAL YEAR SEPARATOR BAR STYLE */
+.fy-separator {
+    border: 3px solid #003087;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background-color:#0085CA;
+    padding: 20px;
+}
+
+/* XBT NETWORK MAP STYLE */
+.xbt-network {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}

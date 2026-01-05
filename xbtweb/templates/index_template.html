@@ -1,0 +1,41 @@
+{% extends "base_template.html" %}
+
+{% block title %}XBT Monitor{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="static/css/index_styles.css" />
+
+
+<h1>XBT MONITOR</h1>
+<hr>
+<img src="static/img/xbtnetwork.png" alt="XBT-network-map" class="xbt-network">
+<hr>
+<h2> XBT REPORT FY {{current_fy}}</h2>
+<hr>
+<h3> Report A: By soop line, year-month and soop line</h3>
+{{report_A_current | safe}}
+<hr>
+<h3> Report B: By callsign and soop line </h3>
+{{report_B_current | safe}}
+<hr>
+<h3> Report C: By soop line and year-month</h3>
+{{report_C_current | safe}}
+
+<hr>
+<div class="fy-separator"></div>
+<hr>
+
+<h2> XBT REPORT FY {{current_fy-1}} </h2>
+<hr>
+<h3> Report A: By soop line, year-month and soop line</h3>
+{{report_A_previous | safe}}
+<hr>
+<h3> Report B: By callsign and soop line </h3>
+{{report_B_previous | safe}}
+<hr>
+<h3> Report C: By soop line and year-month</h3>
+{{report_C_previous | safe}}
+
+
+
+{% endblock %}

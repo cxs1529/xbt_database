@@ -1,0 +1,135 @@
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+h1 {
+	text-align: center;
+	font-size: 40px;
+	font-weight: 700;
+	color: #FFFFFF;  /* #003087 */
+    background-color: #CDCFD1;
+	padding: 1px;
+	margin: 1px;
+    letter-spacing: -2px;
+    line-height: 66px;   
+}
+
+h2 {
+	text-align: center;
+	font-size: 20px;
+	font-weight: 600;
+	color: #003087;
+	padding: 1px;
+	margin: 5px
+}
+
+h3 {	
+    color: #323C46;
+    font-size: 15px;
+    font-weight: bold;
+    text-wrap: balance;
+}
+
+hr {
+	border: 0;
+	height: 1px;
+	background: #003087;
+	margin: 20px 0;
+}
+
+
+/* PROFILE TABLE STYLES */
+tr:nth-child(even) {
+    background-color:#90DFE3;
+}
+
+tr:nth-child(odd) {
+    background-color: #FFFFFF;
+}
+
+tr {
+    padding: 10px;
+    border-spacing: 1px;
+}
+
+tr:hover {
+    background-color: #FF8400;
+}
+
+table {
+	font-family: Helvetica;
+    border-spacing: 1px;
+    margin: 1px;
+    border: 1px solid #ddd;
+    width: 100%;
+    text-align: center;
+    white-space: nowrap;
+    padding: 5px;
+}
+
+th {
+    background-color:#006178;
+	color: white;
+    text-align: center;
+    font-weight: bold;
+    padding: 5px;
+    margin: 1px;
+    border-spacing: 1px;
+}
+
+td {
+    padding: 5px;
+    width: 10%;
+    border: 1px solid #ddd;
+    border-spacing: 1px;    
+}
+
+td.checkbox {
+    width: 1%;
+}
+
+td.index {
+    width: 3%;
+}
+
+
+/* PLOTS AND JSON FILE LINKS */
+a {
+    color: #003087;
+    text-decoration: none;
+}
+
+a:hover {
+    color: grey;
+    text-decoration: underline;
+}
+
+
+/* PAGINATION NEXT/PREVIOUS BUTTON STYLES */
+.hidden {
+  display: none; /* Hide rows that are not on the current page */
+}
+
+.pagination-container {
+    text-align: center;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+#pageInfo {
+    font-weight: bold;
+    margin: 15px 15px;
+}
+
+button {
+    padding: 10px 15px;
+    margin: 10px 0px;
+    cursor: pointer;
+    background-color: #003087;
+    color: white;
+}
+
+button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}

@@ -1,6 +1,6 @@
 from .utilities import *
-# from .dataRanges import *
 
+# Vessel Information Class
 class VesselClass:
   def __init__(self, callSign="na", imo=-99, shipName="na", shipSpeed=-99, shipDirection=-99, launchHeight=-99, latitude=-99, longitude=-99, totalWaterDepth=-99):
     self.callSign = callSign
@@ -13,7 +13,7 @@ class VesselClass:
     self.longitude = longitude
     self.totalWaterDepth = totalWaterDepth
 
-
+# Extract Vessel Information from binary string
 def get_vessel(StringOfBits, csvList, newMessageType):
 
     vessel = VesselClass()

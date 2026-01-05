@@ -1,0 +1,63 @@
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+h1 {
+	text-align: center;
+	font-size: 40px;
+	font-weight: 700;
+	color: #FFFFFF;  /* #003087 */
+    background-color: #CDCFD1;
+	padding: 1px;
+	margin: 1px;
+    letter-spacing: -2px;
+    line-height: 66px;   
+}
+
+h2 {
+	text-align: center;
+	font-size: 20px;
+	font-weight: 600;
+	color: #003087;
+	padding: 1px;
+	margin: 5px
+}
+
+h3 {	
+    color: #323C46;
+    font-size: 15px;
+    font-weight: bold;
+    text-wrap: balance;
+}
+
+hr {
+	border: 0;
+	height: 1px;
+	background: #003087;
+	margin: 20px 0;
+}
+
+/*  MAP FRAME */
+iframe {
+	max-width: 100%;
+	width: 100%;
+    height: 600px;
+    border: 2px solid #ccc;
+	border-radius: 8px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: block;
+}
+
+.maplink a {
+  color: blue; /* Sets the text color */
+  text-decoration: none; /* Removes the underline */
+  font-weight: bold; /* Makes the text bold */
+  background-color: lightgray; /* Sets a background color */
+  padding: 5px 10px; /* Adds padding around the link text */
+  border-radius: 5px; /* Rounds the corners of the background */
+  text-align: center;
+}
+
+.maplink {
+   text-align: center; 
+}

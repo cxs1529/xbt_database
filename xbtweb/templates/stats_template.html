@@ -1,0 +1,33 @@
+{% extends "base_template.html" %}
+
+{% block title %}XBT Stats{% endblock %}
+
+{% block content %}
+
+<link rel="stylesheet" href="static/css/stat_styles.css" />
+
+<h1>XBT MONITOR</h1>
+<hr>
+<h2>XBT PLOTS</h2>
+<hr>
+<iframe src="{{ plot_by_soopline_bar_path }}" width="1300" height="650" frameborder="1" class="soopline-bar">Stats plot
+    by soopline
+    bar</iframe>
+<hr>
+<iframe src="{{ plot_by_soopline_pie_path }}" width="1200" height="600" frameborder="1" class="soopline-pie">Stats plot
+    by soopline
+    pie</iframe>
+<hr>
+<iframe src="{{ plot_by_agency_bar_path }}" width="1300" height="650" frameborder="1" class="agency-bar">Stats plot by
+    agency bar</iframe>
+<hr>
+<iframe src="{{ plot_by_agency_pie_path }}" width="1200" height="600" frameborder="1" class="agency-pie">Stats plot by
+    agency pie</iframe>
+<hr>
+<iframe src="{{ plot_by_map_temperature_path }}" width="1400" height="800" frameborder="1" class="map-temp">Stats plot
+    by map
+    temperature</iframe>
+
+
+
+{% endblock %}

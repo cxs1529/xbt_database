@@ -1,0 +1,20 @@
+{% extends "base_template.html" %}
+
+{% block title %}XBT Monitor{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="static/css/map_styles.css" />
+
+<h1>XBT MONITOR</h1>
+<hr>
+<h2> XBT MAP</h2>
+<hr>
+
+<iframe src="static/maps/xbtmap.html" width="100%" height="600px" style="border:none;"> XBT Map window </iframe>
+
+<p class="maplink">
+    <a href="static/maps/xbtmap.html" target="_blank" rel="noopener noreferrer">VIEW FULL SCREEN</a>
+</p>
+
+
+{% endblock %}

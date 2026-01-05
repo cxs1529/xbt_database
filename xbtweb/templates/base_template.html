@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}XBT Monitor{% endblock %}</title>
+    <link rel="stylesheet" href="static/css/navbar_styles.css" />
+    <link rel="stylesheet" href="static/css/footer_styles.css" />
+    <link rel="icon" href="static/img/noaalogo.png" type="image/x-icon">
+</head>
+
+<body>
+
+    <div class="disclaimer"> <i>This website is experimental and intended for internal use only</i> </div>
+
+    <nav class="navbar">
+        <ul>
+            <li><a href="index.html">HOME</a></li>
+            <li><a href="stats.html">STATS</a></li>
+            <li><a href="map.html">MAP</a></li>
+            <li><a href="profiles.html">PROFILES</a></li>
+            <ul class="timestamp">Last updated {{timestamp}} EST</ul>
+        </ul>
+    </nav>
+
+    <!--  Show specific page content -->
+    {% block content %}{% endblock %}
+
+</body>
+
+<footer>
+    <div class="footer-content">
+        <a href="https://www.noaa.gov/"><img src="static/img/noaaemblem.png" alt="NOAA emblem" class="footer-logo"></a>
+        <div class="text-container">
+            <a href="https://www.aoml.noaa.gov/contact-us/">Contact Us</a> |
+            <a href="https://www.aoml.noaa.gov/">AOML Homepage</a> |
+            <a href="https://www.aoml.noaa.gov/proj/xbt-network/">Official AOML XBT website</a> |
+            <a href="#top">Back to Top</a>
+            <br>
+            <p>Copyright &copy 2025 NOAA's Atlantic Oceanographic and Meteorological Laboratory. All Rights Reserved.
+            </p>
+        </div>
+    </div>
+</footer>
+
+</html>

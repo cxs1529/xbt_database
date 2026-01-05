@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 from .utilities import *
 
 class LineClass:
@@ -42,7 +42,7 @@ def get_sample_datetime(StringOfBits, csvList, newMessageType):
     except:
         year, month, day, hour, minute = [1900,1,1,0,0]                                                      
 
-    dtprofile.dtObject = datetime.datetime(year, month, day, hour, minute, 0) # keep to use in calculations
+    dtprofile.dtObject = datetime(year, month, day, hour, minute, 0) # keep to use in calculations
     # another option is to use epoch time for storage efficiency and calculations
     dtprofile.dtString = dtprofile.dtObject.strftime("%Y-%m-%d %H:%M:%S")
     # print("> dt: ", year, month, day, hour, minute, " >>> ", dtprofile.dtString)
@@ -73,20 +73,22 @@ def get_line(StringOfBits, csvList, newMessageType):
 
     return line
 
-
-def get_profile_data(StringOfBits, csvList, newMessageType):
+# get profile data based on probe type and recorder sampling frequency for depth calculation
+def get_profile_data(StringOfBits, csvList, newMessageType, gearType):
     profile = ProfileClass()
+    # get data points
     try:
         # TIMES_REPLICATED
         [a,b] = get_range(csvList, "TIMES_REPLICATED", newMessageType)
         profile.dataPoints = int(bits_to_dec(StringOfBits,a,b,1,0))
     except:
         profile.dataPoints = 0
-    try:
+    # get temperatures and depths
+    try:        
         # temperatures and depths as recorded - no smoothering
         [a,b] = get_range(csvList, "SEA_SURFACE_TEMPERATURE", newMessageType)
-        profile.temperatures = getTemperatures(StringOfBits,profile.dataPoints,a)
-        profile.depths = getDepths(profile.dataPoints)
+        profile.temperatures = get_profile_temperatures(StringOfBits, profile.dataPoints, a)
+        profile.depths = get_profile_depths(profile.dataPoints, gearType)
     except:
         profile.temperatures = []
         profile.depths = []

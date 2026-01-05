@@ -1,0 +1,12 @@
+Libraries needed
+
+sqlite3 > this usually comes with Python 3+ is used to store and retreive decoded binary files
+bitstring > required to read binary files as a stream of bits to decode
+json, os, shutil, datetime > included with Python
+
+matplotlib > required to create profile temperature vs depth plots
+jinja2 > required to build static html websites
+folium > required to create the interactive map with the xbt deplotyment markers 
+plotly > required to create the interactive statistic plots
+pandas > required to handle large datasets easier (i.e. to summarize plots)
+numpy > usually comes with Python. Used to work with pandas
